@@ -22,6 +22,9 @@ print_header() {
 
 # Print selected image
 print_baseimage() {
+	# Set jython download url for all images
+	jython_url="https://search.maven.org/remotecontent?filepath=org/python/jython-installer/2.7.0/jython-installer-2.7.0.jar"
+
 	# Set download url for openhab version
 	case $version in
 	2.4.0-snapshot)
@@ -80,7 +83,8 @@ print_baseimage() {
 	ENV \
 	    JAVA_URL="$java_url" \
 	    OPENHAB_URL="$openhab_url" \
-	    OPENHAB_VERSION="$version"
+	    OPENHAB_VERSION="$version" \
+	    JYTHON_URL="$jython_url"
 
 	EOI
 }
@@ -245,6 +249,18 @@ print_java_alpine() {
 EOI
 }
 
+# Install jython for debian
+print_jython(){
+	cat >> $1 <<-'EOI'
+	# Install jython
+	ENV EXTRA_JAVA_OPTS="-Xbootclasspath/a:/opt/jython/jython.jar -Dpython.home=/opt/jython -Dpython.path=/openhab/conf/automation/lib"
+	RUN wget -nv -O /tmp/jython.jar ${JYTHON_URL} && \
+	    java -jar /tmp/jython.jar -s -d /opt/jython && \
+	    rm -rf /tmp/jython.jar
+
+EOI
+}
+
 # Install openhab for 2.0.0 and newer
 print_openhab_install() {
 	cat >> $1 <<-'EOI'
@@ -254,6 +270,7 @@ print_openhab_install() {
 	    unzip -q /tmp/openhab.zip -d ${APPDIR} && \
 	    rm /tmp/openhab.zip && \
 	    mkdir -p ${APPDIR}/userdata/logs && \
+	    mkdir -p ${APPDIR}/conf/automation/lib && \
 	    touch ${APPDIR}/userdata/logs/openhab.log && \
 	    cp -a ${APPDIR}/userdata ${APPDIR}/userdata.dist && \
 	    cp -a ${APPDIR}/conf ${APPDIR}/conf.dist && \
@@ -373,6 +390,7 @@ do
 				else
 					print_basepackages $file;
 					print_java $file;
+					print_jython $file;
 					print_gosu $file;
 				fi
 				if [ "$arch" == "arm64" ] && [ "$base" == "debian" ]; then

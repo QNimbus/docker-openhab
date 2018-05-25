@@ -9,7 +9,7 @@
 FROM multiarch/alpine:armhf-v3.7
 
 # Set download urls
-ENV 	    JAVA_URL="https://www.azul.com/downloads/zulu/zdk-8-ga-linux_aarch32hf.tar.gz" 	    OPENHAB_URL="https://bintray.com/artifact/download/openhab/bin/distribution-1.8.3-runtime.zip" 	    OPENHAB_VERSION="1.8.3"
+ENV 	    JAVA_URL="https://www.azul.com/downloads/zulu/zdk-8-ga-linux_aarch32hf.tar.gz" 	    OPENHAB_URL="https://bintray.com/artifact/download/openhab/bin/distribution-1.8.3-runtime.zip" 	    OPENHAB_VERSION="1.8.3" 	    JYTHON_URL="https://search.maven.org/remotecontent?filepath=org/python/jython-installer/2.7.0/jython-installer-2.7.0.jar"
 
 # Set variables and locales
 ENV \

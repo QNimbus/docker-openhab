@@ -9,7 +9,7 @@
 FROM multiarch/debian-debootstrap:armhf-stretch
 
 # Set download urls
-ENV 	    JAVA_URL="https://www.azul.com/downloads/zulu/zdk-8-ga-linux_aarch32hf.tar.gz" 	    OPENHAB_URL="https://bintray.com/artifact/download/openhab/bin/distribution-1.8.3-runtime.zip" 	    OPENHAB_VERSION="1.8.3"
+ENV 	    JAVA_URL="https://www.azul.com/downloads/zulu/zdk-8-ga-linux_aarch32hf.tar.gz" 	    OPENHAB_URL="https://bintray.com/artifact/download/openhab/bin/distribution-1.8.3-runtime.zip" 	    OPENHAB_VERSION="1.8.3" 	    JYTHON_URL="https://search.maven.org/remotecontent?filepath=org/python/jython-installer/2.7.0/jython-installer-2.7.0.jar"
 
 # Set variables and locales
 ENV \
@@ -65,6 +65,12 @@ RUN wget -nv -O /tmp/java.tar.gz ${JAVA_URL} && \
     rm /tmp/java.tar.gz && \
     update-alternatives --install /usr/bin/java java ${JAVA_HOME}/bin/java 50 && \
     update-alternatives --install /usr/bin/javac javac ${JAVA_HOME}/bin/javac 50
+
+# Install jython
+ENV EXTRA_JAVA_OPTS="-Xbootclasspath/a:/opt/jython/jython.jar -Dpython.home=/opt/jython -Dpython.path=/openhab/conf/automation/lib"
+RUN wget -nv -O /tmp/jython.jar ${JYTHON_URL} && \
+    java -jar /tmp/jython.jar -s -d /opt/jython && \
+    rm -rf /tmp/jython.jar
 
 # Install gosu
 ENV GOSU_VERSION 1.10

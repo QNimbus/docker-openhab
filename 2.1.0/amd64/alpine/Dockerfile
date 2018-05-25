@@ -9,7 +9,7 @@
 FROM multiarch/alpine:amd64-v3.7
 
 # Set download urls
-ENV 	    JAVA_URL="https://www.azul.com/downloads/zulu/zdk-8-ga-linux_x64.tar.gz" 	    OPENHAB_URL="https://bintray.com/openhab/mvn/download_file?file_path=org%2Fopenhab%2Fdistro%2Fopenhab%2F2.1.0%2Fopenhab-2.1.0.zip" 	    OPENHAB_VERSION="2.1.0"
+ENV 	    JAVA_URL="https://www.azul.com/downloads/zulu/zdk-8-ga-linux_x64.tar.gz" 	    OPENHAB_URL="https://bintray.com/openhab/mvn/download_file?file_path=org%2Fopenhab%2Fdistro%2Fopenhab%2F2.1.0%2Fopenhab-2.1.0.zip" 	    OPENHAB_VERSION="2.1.0" 	    JYTHON_URL="https://search.maven.org/remotecontent?filepath=org/python/jython-installer/2.7.0/jython-installer-2.7.0.jar"
 
 # Set variables and locales
 ENV \
@@ -68,6 +68,7 @@ RUN wget -nv -O /tmp/openhab.zip ${OPENHAB_URL} && \
     unzip -q /tmp/openhab.zip -d ${APPDIR} && \
     rm /tmp/openhab.zip && \
     mkdir -p ${APPDIR}/userdata/logs && \
+    mkdir -p ${APPDIR}/conf/automation/lib && \
     touch ${APPDIR}/userdata/logs/openhab.log && \
     cp -a ${APPDIR}/userdata ${APPDIR}/userdata.dist && \
     cp -a ${APPDIR}/conf ${APPDIR}/conf.dist && \
